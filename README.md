@@ -14,7 +14,7 @@ Consider an example executable called `myexec` that prints the content of a file
 
 ## Contents of This Project
 
-In this project there is a helper script called `img-exec`. It is meant to capture commonly-needed arguments to `docker` when running images as executables. You can call into it, as will be demonstrated below, or just copy-and-modify it to meet your needs
+In this project there is a helper script called `img-exec`. It is meant to capture commonly-needed arguments to `docker` when running images as executables. You can call into it, as will be demonstrated below, or just copy-and-modify it to meet your needs.
 
 In the `example` directory, there is a script called `myexec` that calls into `img-exec`. There is also a `hello.txt` file that is a sample input to `myexec`.
 
@@ -22,42 +22,42 @@ In the `example/img` directory, there is a `Dockerfile` which simply bundles the
 
 ## Running the Example
 
-The following commands assume you've cloned this project.
+The following commands assume you've cloned this project to `~/executable-image`.
 
 1. Build the image:
 
     ```console
-    $ cd executable-image/example/img
+    $ cd ~/executable-image/example/img
     $ docker build -t myexecimg .
     ```
 1. Add `myexec` and `img-exec` script directories to your `PATH`:
 
     ```console
-    $ cd executable-image
+    $ cd ~/executable-image
     $ export PATH=$(pwd):$PATH
-    $ cd executable-image/example
+    $ cd ~/executable-image/example
     $ export PATH=$(pwd):$PATH
     ```
 
 1. Then call `myexec` with arguments. The first one is a relative path:
 
     ```console
-    $ cd executable-image/example
+    $ cd ~/executable-image/example
     $ myexec hello.txt
     Hello world!
     ```
 
-1. The next one uses `~`.
+1. The next one uses `~`:
 
     ```console
     $ myexec ~/executable-image/example/hello.txt
     Hello world!
     ```
 
-1. The last one uses `/tmp`. First copy the `hello.txt` file to `/tmp`.
+1. The last one uses `/tmp` (`hello.txt` is first copied to `/tmp`):
 
     ```console
-    $ cp hello.txt /tmp
+    $ cp ~/executable-image/example/hello.txt /tmp
     $ myexec /tmp/hello.txt
     Hello world!
     ```
