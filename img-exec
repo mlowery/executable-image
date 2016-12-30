@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# it is expected that the caller will pass in --entrypoint and an image name followed by any additional arguments
+
+# args explained:
+# -w:                make relative paths work
+# --volume (/tmp/):  make /tmp/... paths work; see [1]
+# --volume ($HOME/): make ~/... paths work
+# --net:             no need for separate net namespace
+# --rm:              no need to keep this container
+
+# [1] Docker for Mac automatically configures File Sharing for /tmp but $TMPDIR looks like 
+#     /var/folders/3y/d44gn_2x7vv8d9d67969f54c0000gn/T/ which is not configured in File Sharing;
+#     the workaround is to use /tmp instead of $TMPDIR; if you pass paths that use $TMPDIR, they 
+#     will not work; instead, /tmp instead; example: mktemp --tmpdir=/tmp
+
+exec docker run -w="$(pwd)" --volume=/tmp/:/tmp/ --volume=$HOME/:$HOME/ --net=host --rm "${@}"
