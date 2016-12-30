@@ -4,7 +4,7 @@ Note: This is only expected to work with Docker for Mac.
 
 An executable image is an image that you run as if it were an executable. It is not interactive.
 
-Consider an example executable called `myexec` that prints the content of a file passed as its first argument. For this to work as a container, the path to the file inside and outside the container must match. This can be accomplished via volumes.
+Consider an example executable called `myexec` that prints the content of a file passed as its first argument. For this to work as a container, the path to the file inside and outside the container must match. This can be accomplished via volumes. There is nothing novel here--I'm just documenting some frequently-used `docker` arguments that are necessary for this to work.
 
 ## Paths Supported
 
