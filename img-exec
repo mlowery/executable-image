@@ -10,10 +10,11 @@ set -euo pipefail
 # --volume ($HOME/): make ~/... paths work
 # --net:             no need for separate net namespace
 # --rm:              no need to keep this container
+# --tty:             necessary for colors to work
 
 # [1] Docker for Mac automatically configures File Sharing for /tmp but $TMPDIR looks like 
 #     /var/folders/3y/d44gn_2x7vv8d9d67969f54c0000gn/T/ which is not configured in File Sharing;
 #     the workaround is to use /tmp instead of $TMPDIR; if you pass paths based on $TMPDIR, they 
 #     will not work; instead, use /tmp; example: mktemp --tmpdir=/tmp
 
-exec docker run -w="$(pwd)" --volume=/tmp/:/tmp/ --volume=$HOME/:$HOME/ --net=host --rm "${@}"
+exec docker run -w="$(pwd)" --volume=/tmp/:/tmp/ --volume=$HOME/:$HOME/ --net=host --rm --tty "${@}"
