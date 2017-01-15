@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
-# Note: You'll want to pass `-e HOME` (before the image name) if you need access 
-#   to other $HOME dir files in addition to anything passed explicitly.
-
-exec img-exec --entrypoint=/usr/bin/myexec myexecimg "${@}"

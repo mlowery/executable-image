@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+while read line; do
+    echo "***$line***"
+done

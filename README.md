@@ -2,66 +2,53 @@
 
 Note: This is only expected to work with Docker for Mac.
 
-An executable image is an image that you run as if it were an executable. It is not interactive.
+An executable image is an image that you run as if it were an executable.
 
-Consider an example executable called `myexec` that prints the content of a file passed as its first argument. For this to work as a container, the path to the file inside and outside the container must match. This can be accomplished via volumes. There is nothing novel here--I'm just documenting some frequently-used `docker` arguments that are necessary for this to work.
+Consider an example executable called `myexec` that prints the content of a file passed as its first argument. For this to work as a container, the path to the file inside and outside the container must match.
 
-## Paths Supported
+There is nothing novel about this project--it just captures some frequently-used `docker run` arguments that are necessary for all of this to work.
+
+## Features Supported
 
 * Relative paths (under any of the absolute paths below)
 * `~` and `$HOME`-based paths
 * `/tmp`-based paths
+* Interactive apps like `vi`
+* Piping to stdin and stdout
+
+## Features Not Supported
+
+* `$TMPDIR`-based paths: Docker for Mac automatically configures File Sharing for `/tmp` but `$TMPDIR` looks like     `/var/folders/3y/d44gn_2x7vv8d9d67969f54c0000gn/T/` which is not configured in File Sharing; the workaround is to use `/tmp` instead of `$TMPDIR`; if you pass paths based on `$TMPDIR`, they will not work; instead, use `/tmp`; example: `mktemp --tmpdir=/tmp`.
 
 ## Contents of This Project
 
-In this project there is a helper script called `img-exec`. It is meant to capture commonly-needed arguments to `docker` when running images as executables. You can call into it, as will be demonstrated below, or just copy-and-modify it to meet your needs.
+In this project there is a helper script called `img-exec`. It is meant to capture commonly-needed arguments to `docker run` when running images as executables. You can call into it, as will be demonstrated below, or just copy-and-modify the `docker run` arguments to meet your needs.
 
-In the `example` directory, there is a script called `myexec` that calls into `img-exec`. There is also a `hello.txt` file that is a sample input to `myexec`.
+The following files/directories are at the root of this project:
 
-In the `example/img` directory, there is a `Dockerfile` which simply bundles the "real" `myexec` executable into an image.
+* `examples`: Discussed below.
+* `img-exec`: Helper script mentioned above.
+* `LICENSE-MIT.txt`: License.
+* `README.md`: This file.
 
-## Running the Example
+In the `examples` directory, there are subdirectories demonstrating different features:
 
-The following commands assume you've cloned this project to `~/executable-image`.
+* `paths`: Demonstrates passing file paths to the container.
+* `pipes`: Demonstrates piping input into and out of the container.
+* `vi`: Demonstrates an interactive application like `vi` (`vim`).
 
-1. Build the image:
+Each subdirectory of `examples` has the following files:
 
-    ```console
-    $ cd ~/executable-image/example/img
-    $ docker build -t myexecimg .
-    ```
-1. Add `myexec` and `img-exec` script directories to your `PATH`:
+* `Dockerfile`: Used to build the Docker image for the example.
+* `run`: Main script copied into the image (and used as `docker run` `--entrypoint` argument.
+* `*-example`: The script that calls into the `img-exec` helper script.
+* `Makefile`: Used to run `build` and `run` targets.
+* `img-exec`: A symlink to the main copy of `img-exec`.
+* Supporting files, if any.
 
-    ```console
-    $ cd ~/executable-image
-    $ export PATH=$(pwd):$PATH
-    $ cd ~/executable-image/example
-    $ export PATH=$(pwd):$PATH
-    ```
-
-1. Then call `myexec` with arguments. The first one is a relative path:
-
-    ```console
-    $ cd ~/executable-image/example
-    $ myexec hello.txt
-    Hello world!
-    ```
-
-1. The next one uses `~`:
-
-    ```console
-    $ myexec ~/executable-image/example/hello.txt
-    Hello world!
-    ```
-
-1. The last one uses `/tmp` (`hello.txt` is first copied to `/tmp`):
-
-    ```console
-    $ cp ~/executable-image/example/hello.txt /tmp
-    $ myexec /tmp/hello.txt
-    Hello world!
-    ```
+To run an example, change to that directory and run `make build run`. You can look into the `Makefile`s `run` target to see how it works.
 
 # Related
 
 * [Executable Images - How to Dockerize Your Development Machine](https://www.infoq.com/articles/docker-executable-images)
+* [bcbcarl/docker-vim](https://github.com/bcbcarl/docker-vim)

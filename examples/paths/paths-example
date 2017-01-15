@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+exec ./img-exec --entrypoint=/usr/bin/run exec-img-paths-example "${@}"
